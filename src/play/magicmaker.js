@@ -20,7 +20,7 @@ export default function MagicMaker(play, ctx, bs) {
 
 
     magic.onePlatformCollidesAnyPlatform(pHandle, (platform) => {
-      console.log(platform);
+      console.log(pHandle, platform);
     });
   };
 
@@ -42,7 +42,7 @@ export default function MagicMaker(play, ctx, bs) {
   const handleMove = (x, y) => {
     if (selectedHandle) {
       selectedHandle = maker.moveHandle(selectedHandle, x, y);
-      magic.movePlatform(selectedHandle.item.data, x, y);
+      selectedHandle.item.data = magic.movePlatform(selectedHandle.item.data, x, y);
     }
   };
 

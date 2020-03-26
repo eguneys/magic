@@ -68,7 +68,7 @@ export default function MagicCollisionGroup() {
 
   this.oneTypeCollidesAnyType = type1 => (handle, onCollide) => {
     coll.detectCollisionForOne(handle.r, type1, (item) => {
-      if (handle.item !== item) {
+      if (handle !== item) {
         onCollide(item);
       }
     });
@@ -76,7 +76,7 @@ export default function MagicCollisionGroup() {
 
   this.oneTypeCollidesOtherType = (type1, type2) => (handle, onCollide) => {
     coll.detectCollisionForOne(handle.r, type1, (item) => {
-      if (handle.item !== item && item.type === type2) {
+      if (handle !== item && item.type === type2) {
         onCollide(item);
       }
     });

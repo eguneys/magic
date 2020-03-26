@@ -12,11 +12,11 @@ export default function MagicCollision() {
     if (!byKey[key]) {
       byKey[key] = [];
     }
-    let insertMe = {
+    let insertMe = new MagicCollisionItem({
       key,
       item,
       r
-    };
+    });
 
     byKey[key].push(insertMe);
     body.insertWithRectangle(r, insertMe);
@@ -71,8 +71,10 @@ export default function MagicCollision() {
       });
     }
   };
+}
 
-  
-  
-  
+function MagicCollisionItem({ key, r, item }) {
+  this.key = key;
+  this.r = r;
+  this.item = item;  
 }
