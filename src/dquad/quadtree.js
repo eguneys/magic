@@ -34,6 +34,61 @@ export default function QuadTree(x, y, w, h,
     }
   };
 
+  this.queryWithRectangle = (tRect, fn) => {
+    if (tRect.contains(rect)) {
+      fn(data);
+      return;
+    }
+    if (tRect.intersects(rect) || rect.contains(tRect)) {
+      this.queryChildren(fn, (child) => {
+        child.queryWithRectangle(tRect, fn);
+      });
+    }
+  };
+
+
+  this.insertWithRectangle = (tRect, initialData, onUpdateOldData) => {
+    if (tRect.contains(rect)) {
+      this.foldChildrenToParentWithUpdate(onUpdateOldData);
+      return;
+    }
+    if (tRect.intersects(rect) || rect.contains(tRect)) {
+      this.insertChildren(initialData, (child) => {
+        child.insertWithRectangle(tRect, initialData, onUpdateOldData);
+      });
+    }
+  };
+
+  this.insertChildren = (initialData, onChild) => {
+    if (depth > 0) {
+      if (children === null) {
+        createChildren(initialData);
+      }
+      children.forEach(child => {
+        onChild(child);
+      });
+      
+      clearRedundantChildren();
+    } else {
+      foldChildrenToParent(initialData);
+    }
+  };
+
+
+  this.queryChildren = (onLeafReached, onRecurse) => {
+    if (depth > 0) {
+      if (children === null) {
+        onLeafReached(data);
+      } else {
+        children.forEach(child => {
+          onRecurse(child);
+        });
+      }
+    } else {
+      onLeafReached(data);
+    }
+  };
+
   this.traverse = onLeafReached => {
     if (children !== null) {
       children.forEach(child => child.traverse(onLeafReached));
@@ -72,6 +127,11 @@ export default function QuadTree(x, y, w, h,
   const foldChildrenToParent = this.foldChildrenToParent = (_data) => {
     children = null;
     data = _data;
+  };
+
+  const foldChildrenToParentWithUpdate = this.foldChildrenToParentWithUpdate = (onUpdateOldData) => {
+    children = null;
+    onUpdateOldData(data);
   };
 
   const createChildren = (newData) => {

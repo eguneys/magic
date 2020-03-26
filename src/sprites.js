@@ -4,9 +4,9 @@ const wholeFrame = (scene, image, w, h = w) =>
       scene.texture(image)
       .frame(point(), point(w, h));
 
-const makeFrame = atlas => (x, y, w, h = w) => 
+const makeFrame = atlas => (x, y, w, h = w, anchor) => 
       atlas.frame(point(x, y),
-                  point(w, h));
+                  point(w, h), point(anchor, anchor));
 
 const animation = (fM, x, y, w, n) => {
   let res = [];
@@ -18,8 +18,8 @@ const animation = (fM, x, y, w, n) => {
 
 export default function makeSprites(scene, assets) {
 
-  // const magicAtlas = scene.texture(assets['magic']);
-  // const magicFrame = makeFrame(magicAtlas);
+  const cardsAtlas = scene.texture(assets['cards']);
+  const cardsFrame = makeFrame(cardsAtlas);
 
   return {
     white: scene.texture(bgTexture('white')),

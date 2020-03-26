@@ -1,5 +1,7 @@
 import { rect } from '../dquad/rect';
 
+import Board from './board';
+
 export default function Play(ctx) {
 
   const { canvas, 
@@ -9,32 +11,26 @@ export default function Play(ctx) {
   const bs = (() => {
     const { width, height } = canvas;
 
-    let candy = rect(
-      0, 0,
-      32,
-      32
-    );
-
     return {
       width,
-      height,
-      bulletWidth: 32,
-      candy
+      height
     };
   })();
 
+  let board = new Board(this, ctx, bs);
+
 
   this.init = data => {
-
+    board.init({});
   };
 
   this.update = delta => {
-
+    board.update(delta);
   };
 
 
   this.render = () => {
-
+    board.render();
   };
   
 }
