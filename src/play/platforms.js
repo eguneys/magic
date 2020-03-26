@@ -1,4 +1,4 @@
-import HeroSprite from './herosprite';
+import MagicSprite from './magicsprite';
 import Pool from 'poolf';
 
 export default function Platforms(play, ctx, bs) {
@@ -27,22 +27,28 @@ export default function Platforms(play, ctx, bs) {
       let dP = getDp(id);
       dP.move(r.x, r.y);
     });
+    pool.each(_ => _.update(delta));
   };
 
 
   this.render = () => {
-    
+    pool.each(_ => _.render());
   };
   
 }
 
 function Platform(play, ctx, bs) {
 
-  let dS = new HeroSprite(this, ctx, bs);
+  const { platform: { width: platformWidth,
+                      height: platformHeight } } = bs;
+
+  let dS = new MagicSprite(this, ctx, bs);
 
   this.init = data => {
     this.id = data.id;
-    dS.init({ x: 0, y: 0 });
+    dS.init({ x: 0, y: 0, 
+              width: platformWidth,
+              height: platformHeight });
     dS.add();
   };
   

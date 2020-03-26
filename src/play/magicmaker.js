@@ -23,7 +23,7 @@ export default function MagicMaker(play, ctx, bs) {
 
       if (ending) {
 
-        addPlatform(10, 10);
+        addPlatform(start[0] + dpos[0], start[1] + dpos[1]);
         
       } else {
         // console.log(start, dpos);
