@@ -16,7 +16,9 @@ export default function QuadList(x, y, w, h, depth) {
   this.debug = () => {
     body.traverse((data, rect, index) => {
       // console.log(data, rect, index);
-      console.log(Math.round(rect.x), Math.round(rect.y), Math.round(rect.width));
+      if (data.length > 0) {
+        console.log(data, Math.round(rect.x), Math.round(rect.y));
+      }
     });
   };
 

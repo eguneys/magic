@@ -8,10 +8,11 @@ export default function MagicCollisionGroup() {
 
   const makeItem = (data, type, iRect) => ({
     id: makeId(),
-    mr: iRect.copy(),
     type,
     data
   });
+
+  this.debug = coll.debug;
 
   let itemsByType = {};
 
@@ -44,9 +45,10 @@ export default function MagicCollisionGroup() {
     let itemList = itemsByType[type];
     return (handle, x, y) => {
       safeRemoveFromArray(itemList, handle);
-      handle.item.mr.move(x, y);
+      let newR = handle.r.copy();
+      newR.move(x, y);
       let newHandle = coll.updateCollision(handle,
-                                           handle.item.mr, 
+                                           newR,
                                            handle.item);
       itemList.push(newHandle);
       return newHandle;

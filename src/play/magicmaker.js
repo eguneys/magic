@@ -18,6 +18,7 @@ export default function MagicMaker(play, ctx, bs) {
     let hHandle = maker.addHandle(x, y, platformWidth, platformHeight, 
                                   pHandle);
 
+
     magic.onePlatformCollidesAnyPlatform(pHandle, (platform) => {
       console.log(platform);
     });
@@ -40,11 +41,8 @@ export default function MagicMaker(play, ctx, bs) {
 
   const handleMove = (x, y) => {
     if (selectedHandle) {
-
-      console.log(selectedHandle);
-      maker.moveHandle(selectedHandle, x, y);
+      selectedHandle = maker.moveHandle(selectedHandle, x, y);
       magic.movePlatform(selectedHandle.item.data, x, y);
-
     }
   };
 

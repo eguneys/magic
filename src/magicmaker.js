@@ -7,6 +7,8 @@ export default function MagicMaker() {
 
   let Handle = 'handle';
 
+  this.debug = hColl.debug;
+
   this.addHandle = hColl.addItemByType(Handle);
 
   this.eachHandle = hColl.eachItemByType(Handle);
