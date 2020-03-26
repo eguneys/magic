@@ -2,7 +2,7 @@ import QuadList from './dquad/quadlist';
 
 export default function MagicCollision() {
   
-  let body = new QuadList(0, 0, 1000, 1000, 7);
+  let body = new QuadList(0, 0, 1000, 1000, 10);
 
   let byKey = {};
 

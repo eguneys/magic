@@ -32,11 +32,11 @@ export default function PHandles(play, ctx, bs) {
 
       dP.move(r.x, r.y);
 
-      if (highlight) {
-        dP.visible(true);
-      } else {
-        dP.visible(false);
-      }
+      // if (highlight) {
+      //   dP.visible(true);
+      // } else {
+      //   dP.visible(false);
+      // }
       item.highlight = false;
     });
     pool.each(_ => _.update(delta));

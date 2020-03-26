@@ -7,12 +7,10 @@ export default function Magic() {
   let Hero = 'hero',
       Platform = 'platform';
 
-  gColl.addItemByType(Platform);
-  gColl.addItemByType(Hero);
+  this.addPlatform = gColl.addItemByType(Platform);
+  this.addHero = gColl.addItemByType(Hero);
 
   this.eachPlatform = gColl.eachItemByType(Platform);
-
-  this.addPlatform = gColl.addItemByType(Platform);
 
   this.movePlatform = gColl.moveItemByType(Platform);
 

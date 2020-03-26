@@ -53,6 +53,13 @@ export default function MagicCollisionGroup() {
     };
   };
 
+  this.oneTypeCollidesPoint = type1 => (x, y, onCollide) => {
+    let pR = rect(x, y, 10, 10);
+    coll.detectCollisionForOne(pR, type1, item => {
+      onCollide(item);
+    });
+  };
+
   this.typesCollides = (type1, type2) => (onCollide) => {
     coll.detectCollisionForAll(type1, type2, onCollide);
   };

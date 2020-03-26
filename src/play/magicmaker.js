@@ -40,8 +40,9 @@ export default function MagicMaker(play, ctx, bs) {
 
   const handleMove = (x, y) => {
     if (selectedHandle) {
-      // selectedHandle.move = [x, y];
-      
+
+      console.log(selectedHandle);
+      maker.moveHandle(selectedHandle, x, y);
       magic.movePlatform(selectedHandle.item.data, x, y);
 
     }
