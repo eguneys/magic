@@ -11,7 +11,10 @@ export default function Play(ctx) {
   const bs = (() => {
     const { width, height } = canvas;
 
+    const hero = rect(0, 0, 16, 32);
+
     return {
+      hero,
       width,
       height
     };

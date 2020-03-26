@@ -9,7 +9,7 @@ export default function QuadList(x, y, w, h) {
   const safeRemoveFromArray = (arr, item) => {
     let i = arr.indexOf(item);
     if (i > -1) {
-      i.splice(i, 1);
+      arr.splice(i, 1);
     }
   };
 

@@ -25,7 +25,8 @@ export default function makeSprites(scene, assets) {
     white: scene.texture(bgTexture('white')),
     black: scene.texture(bgTexture('black')),
     gray: scene.texture(bgTexture('gray')),
-    brown: scene.texture(bgTexture('brown'))
+    brown: scene.texture(bgTexture('brown')),
+    hero: scene.texture(bgTexture('yellow'))
   };
 }
 
