@@ -1,3 +1,4 @@
+import { makeId, safeRemoveFromArray } from './util';
 import { rect } from './dquad/geometry';
 
 import MagicCollision from './magiccolision';
@@ -13,12 +14,15 @@ export default function Magic() {
     hero: true
   };
 
-  const platformItem = {
+  const platformItem = () => ({
+    id: makeId(),
     platform: true
-  };
+  });
 
   let heroRect,
       heroColl;
+
+  let platforms = [];
 
   this.addHero = (x, y, w, h) => {
     heroRect = rect(x,y,w,h);
@@ -39,12 +43,19 @@ export default function Magic() {
     return heroItem;
   };
 
+  this.platforms = () => platforms;
+  this.eachPlatform = (fn) => platforms.forEach(fn);
+
   this.addPlatform = (x, y, w, h) => {
     let pRect = rect(x, y, w, h);
-    return coll.addCollision(Platform, pRect, platformItem);
+    let handle = coll.addCollision(Platform, pRect, platformItem());
+
+    platforms.push(handle);
+    return handle;
   };
 
   this.removePlatform = (handle) => {
+    safeRemoveFromArray(platforms, handle);
     coll.deleteCollision(handle);
   };
 

@@ -13,8 +13,11 @@ export default function Play(ctx) {
 
     const hero = rect(0, 0, 16, 32);
 
+    const platform = rect(0, 0, 32, 32);
+
     return {
       hero,
+      platform,
       width,
       height
     };
