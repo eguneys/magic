@@ -12,6 +12,10 @@ export default function Rectangle(x, y, w, h) {
   let x1,y1,
       A,B,C,D;
 
+  this.copy = () => {
+    return new Rectangle(x, y, w, h);
+  };
+
   this.move = (newX, newY) => {
     x = this.x = newX;
     y = this.y = newY;

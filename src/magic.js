@@ -1,65 +1,21 @@
-import { makeId, safeRemoveFromArray } from './util';
-import { rect } from './dquad/geometry';
-
-import MagicCollision from './magiccolision';
+import MagicCollisionGroup from './magiccollisiongroup';
 
 export default function Magic() {
 
-  let coll = new MagicCollision();
+  let gColl = new MagicCollisionGroup();
 
   let Hero = 'hero',
       Platform = 'platform';
 
-  const heroItem = {
-    hero: true
-  };
+  gColl.addItemByType(Platform);
+  gColl.addItemByType(Hero);
 
-  const platformItem = () => ({
-    id: makeId(),
-    platform: true
-  });
+  this.eachPlatform = gColl.eachItemByType(Platform);
 
-  let heroRect,
-      heroColl;
+  this.addPlatform = gColl.addItemByType(Platform);
 
-  let platforms = [];
+  this.movePlatform = gColl.moveItemByType(Platform);
 
-  this.addHero = (x, y, w, h) => {
-    heroRect = rect(x,y,w,h);
-    heroColl = coll.addCollision(Hero, heroRect, heroItem);
-  };
-  this.moveHero = (x, y) => {
-    heroRect.move(x, y);
-    coll.updateCollision(heroColl, heroRect, heroItem);
-  };
+  this.onePlatformCollidesAnyPlatform = gColl.oneTypeCollidesAnyType(Platform);
 
-  this.hero = () => !!heroRect;
-
-  this.heroRect = () => {
-    return heroRect;
-  };
-
-  this.heroItem = () => {
-    return heroItem;
-  };
-
-  this.platforms = () => platforms;
-  this.eachPlatform = (fn) => platforms.forEach(fn);
-
-  this.addPlatform = (x, y, w, h) => {
-    let pRect = rect(x, y, w, h);
-    let handle = coll.addCollision(Platform, pRect, platformItem());
-
-    platforms.push(handle);
-    return handle;
-  };
-
-  this.removePlatform = (handle) => {
-    safeRemoveFromArray(platforms, handle);
-    coll.deleteCollision(handle);
-  };
-
-  this.heroCollidesPlatform = (onCollide) => {
-    this.detectCollision(Hero, Platform, onCollide);
-  };
 }

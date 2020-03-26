@@ -1,14 +1,16 @@
 import MagicSprite from './magicsprite';
 import Pool from 'poolf';
 
-export default function Platforms(play, ctx, bs) {
+export default function PHandles(play, ctx, bs) {
 
-  let magic;
+  let magic,
+      maker;
 
-  let pool = new Pool(() => new Platform(this, ctx, bs));
+  let pool = new Pool(() => new PHandle(this, ctx, bs));
 
   this.init = data => {
     magic = data.magic;
+    maker = data.maker;
   };
 
   const getDp = (id) => {
@@ -23,12 +25,19 @@ export default function Platforms(play, ctx, bs) {
   };
 
   this.update = delta => {
+    maker.eachHandle(({ item, r }) => {
+      let { id, highlight } = item;
 
-    magic.eachPlatform((handle) => {
-      let { item, r } = handle;
-      let { id } = item;
       let dP = getDp(id);
+
       dP.move(r.x, r.y);
+
+      if (highlight) {
+        dP.visible(true);
+      } else {
+        dP.visible(false);
+      }
+      item.highlight = false;
     });
     pool.each(_ => _.update(delta));
   };
@@ -40,22 +49,25 @@ export default function Platforms(play, ctx, bs) {
   
 }
 
-function Platform(play, ctx, bs) {
+function PHandle(play, ctx, bs) {
 
   const { frames, layers: { oneLayer } } = ctx;
 
   const { platform: { width: platformWidth,
                       height: platformHeight } } = bs;
 
-  let dS = new MagicSprite(this, ctx, bs, frames['hero']);
+  let dS = new MagicSprite(this, ctx, bs);
 
   this.init = data => {
     this.id = data.id;
     dS.init({ x: 0, y: 0, 
               width: platformWidth,
-              height: platformHeight });
+              height: platformHeight,
+              frame: frames['phandle'] });
     dS.add();
   };
+
+  this.visible = dS.visible;
   
   this.move = (x, y) => {
     dS.move(x, y);

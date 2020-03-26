@@ -47,22 +47,22 @@ export default function QuadTree(x, y, w, h,
   };
 
 
-  this.insertWithRectangle = (tRect, initialData, onUpdateOldData) => {
+  this.insertWithRectangle = (tRect, makeInitialData, onUpdateOldData) => {
     if (tRect.contains(rect)) {
       this.foldChildrenToParentWithUpdate(onUpdateOldData);
       return;
     }
     if (tRect.intersects(rect) || rect.contains(tRect)) {
-      this.insertChildren(initialData, (child) => {
-        child.insertWithRectangle(tRect, initialData, onUpdateOldData);
+      this.insertChildren(makeInitialData, (child) => {
+        child.insertWithRectangle(tRect, makeInitialData, onUpdateOldData);
       });
     }
   };
 
-  this.insertChildren = (initialData, onChild) => {
+  this.insertChildren = (makeInitialData, onChild) => {
     if (depth > 0) {
       if (children === null) {
-        createChildren(initialData);
+        createChildren(makeInitialData);
       }
       children.forEach(child => {
         onChild(child);
@@ -70,7 +70,7 @@ export default function QuadTree(x, y, w, h,
       
       clearRedundantChildren();
     } else {
-      foldChildrenToParent(initialData);
+      foldChildrenToParent(makeInitialData());
     }
   };
 
@@ -134,7 +134,8 @@ export default function QuadTree(x, y, w, h,
     onUpdateOldData(data);
   };
 
-  const createChildren = (newData) => {
+
+  const createChildren = (makeNewData) => {
     let wh = [
       { w: 0, h: 0 },
       { w: 1, h: 0 },
@@ -149,8 +150,9 @@ export default function QuadTree(x, y, w, h,
           w = rect.width / 2,
           h = rect.height / 2;
 
+      let newData = makeNewData();
       let newChild = new QuadTree(x,y,w,h,
-                                  data, depth - 1, i);
+                                  newData, depth - 1, i);
       children.push(newChild);
     }
   };

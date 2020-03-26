@@ -1,6 +1,6 @@
 import { sprite } from '../asprite';
 
-export default function MagicSprite(play, ctx) {
+export default function MagicSprite(play, ctx, bs) {
 
   const { frames, layers: { oneLayer } } = ctx;
 
@@ -15,10 +15,16 @@ export default function MagicSprite(play, ctx) {
     y = data.y;
     width = data.width;
     height = data.height;
+
+    if (data.frame) {
+      dBg.frame = data.frame;
+    }
   };
 
   this.update = delta => {
   };
+
+  this.visible = a => dBg.visible = a;
 
   this.move = (_x, _y) => {
     x = _x;
@@ -27,6 +33,9 @@ export default function MagicSprite(play, ctx) {
   this.size = (w, h) => {
     width = w;
     height = h;
+  };
+  this.frame = frame => {
+    dBg.frame = frame;
   };
 
   this.add = () => {

@@ -1,8 +1,8 @@
 import QuadTree from './quadtree';
 
-export default function QuadList(x, y, w, h) {
+export default function QuadList(x, y, w, h, depth) {
 
-  let body = new QuadTree(x, y, w, h, []);
+  let body = new QuadTree(x, y, w, h, [], depth);
 
   let objects = [];
 
@@ -13,13 +13,20 @@ export default function QuadList(x, y, w, h) {
     }
   };
 
+  this.debug = () => {
+    body.traverse((data, rect, index) => {
+      // console.log(data, rect, index);
+      console.log(Math.round(rect.x), Math.round(rect.y), Math.round(rect.width));
+    });
+  };
+
   this.objects = () => objects;
 
   this.each = (fn) => { objects.forEach(fn); };
 
   this.insertWithRectangle = (tRect, item) => {
     objects.push(item);
-    body.insertWithRectangle(tRect, [], (list) => {
+    body.insertWithRectangle(tRect, () => [], (list) => {
       list.push(item);
     });
   };
@@ -27,7 +34,7 @@ export default function QuadList(x, y, w, h) {
   this.deleteWithRectangle = (tRect, item) => {
     safeRemoveFromArray(objects, item);
 
-    body.insertWithRectangle(tRect, [], (list) => {
+    body.insertWithRectangle(tRect, () => [], (list) => {
       safeRemoveFromArray(list, item);
     });
   };
