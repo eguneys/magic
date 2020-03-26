@@ -1,24 +1,20 @@
 import { sprite } from '../asprite';
 
-export default function MagicSprite(play, ctx, bs) {
+export default function MagicSprite(play, ctx, bs, frame) {
 
   const { frames, layers: { oneLayer } } = ctx;
 
   let dBg = sprite(frames['hero']);
 
-  let x, y,
-      width,
-      height;
+  let { x, y,
+        width,
+        height } = bs.local;
+
+  if (frame) {
+    dBg.frame = frame;
+  }
 
   this.init = data => {
-    x = data.x;
-    y = data.y;
-    width = data.width;
-    height = data.height;
-
-    if (data.frame) {
-      dBg.frame = data.frame;
-    }
   };
 
   this.update = delta => {
@@ -38,8 +34,8 @@ export default function MagicSprite(play, ctx, bs) {
     dBg.frame = frame;
   };
 
-  this.add = () => {
-    oneLayer.add(dBg);
+  this.add = (layer) => {
+    layer.add(dBg);
   };
 
   this.remove = () => {

@@ -15,9 +15,12 @@ export default function Play(ctx) {
 
     const platform = rect(0, 0, 16, 16);
 
+    const toolbar = rect(0, 0, width, 64);
+
     return {
       hero,
       platform,
+      toolbar,
       width,
       height
     };

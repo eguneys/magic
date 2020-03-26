@@ -6,6 +6,7 @@ import MagicMakerView from './magicmaker';
 import Hero from './hero';
 import Platforms from './platforms';
 import PHandles from './phandles';
+import Toolbar from './toolbar';
 
 export default function Board(play, ctx, bs) {
 
@@ -13,6 +14,8 @@ export default function Board(play, ctx, bs) {
   let hero = new Hero(this, ctx, bs);
   let platforms = new Platforms(this, ctx, bs);
   let pHandles = new PHandles(this, ctx, bs);
+
+  let toolbar = new Toolbar(this, ctx, bs);
 
   let simulation = new MagicSimulation();
 
@@ -28,6 +31,7 @@ export default function Board(play, ctx, bs) {
     // hero.init({magic});
     platforms.init({magic});
     pHandles.init({magic, maker});
+    toolbar.init({magic, maker});
   };
 
   this.update = delta => {
@@ -36,6 +40,7 @@ export default function Board(play, ctx, bs) {
     // hero.update(delta);
     platforms.update(delta);
     pHandles.update(delta);
+    toolbar.update(delta);
   };
 
 
@@ -45,6 +50,7 @@ export default function Board(play, ctx, bs) {
     // hero.render();
     platforms.render();
     pHandles.render();
+    toolbar.render();
   };
   
 }

@@ -5,7 +5,8 @@ export default function MagicMaker() {
 
   let hColl = new MagicCollisionGroup();
 
-  let Handle = 'handle';
+  let Handle = 'handle',
+      Toolbar = 'toolbar';
 
   this.debug = hColl.debug;
 
@@ -19,5 +20,8 @@ export default function MagicMaker() {
 
   this.handleCollidesPoint = hColl.oneTypeCollidesPoint(Handle);
 
+  this.addToolbar = hColl.addItemByType(Toolbar);
+  this.eachToolbar = hColl.eachItemByType(Toolbar);
+  this.toolbarCollidesPoint = hColl.oneTypeCollidesPoint(Toolbar);
 
 }

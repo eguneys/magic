@@ -1,4 +1,4 @@
-export default function Play(play, ctx) {
+export default function Play(play, ctx, bs) {
 
   this.init = data => {
   };

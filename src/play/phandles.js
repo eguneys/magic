@@ -32,11 +32,11 @@ export default function PHandles(play, ctx, bs) {
 
       dP.move(r.x, r.y);
 
-      // if (highlight) {
-      //   dP.visible(true);
-      // } else {
-      //   dP.visible(false);
-      // }
+      if (highlight) {
+        dP.visible(true);
+      } else {
+        dP.visible(false);
+      }
       item.highlight = false;
     });
     pool.each(_ => _.update(delta));
@@ -51,20 +51,23 @@ export default function PHandles(play, ctx, bs) {
 
 function PHandle(play, ctx, bs) {
 
-  const { frames, layers: { oneLayer } } = ctx;
+  const { frames, layers: { twoLayer } } = ctx;
 
   const { platform: { width: platformWidth,
                       height: platformHeight } } = bs;
 
-  let dS = new MagicSprite(this, ctx, bs);
+  let dSBounds = { x: 0, y: 0, 
+                   width: platformWidth,
+                   height: platformHeight };
+
+  let dS = new MagicSprite(this, ctx, 
+                           { local: dSBounds, ...bs }, 
+                           frames['phandle'] );
 
   this.init = data => {
     this.id = data.id;
-    dS.init({ x: 0, y: 0, 
-              width: platformWidth,
-              height: platformHeight,
-              frame: frames['phandle'] });
-    dS.add();
+    dS.init({});
+    dS.add(twoLayer);
   };
 
   this.visible = dS.visible;

@@ -47,14 +47,18 @@ function Platform(play, ctx, bs) {
   const { platform: { width: platformWidth,
                       height: platformHeight } } = bs;
 
-  let dS = new MagicSprite(this, ctx, bs, frames['hero']);
+  let dSBounds = { x: 0, y: 0, 
+                   width: platformWidth,
+                   height: platformHeight };
+
+  let dS = new MagicSprite(this, ctx, 
+                           { local: dSBounds, ...bs }, 
+                           frames['platform']);
 
   this.init = data => {
     this.id = data.id;
-    dS.init({ x: 0, y: 0, 
-              width: platformWidth,
-              height: platformHeight });
-    dS.add();
+    dS.init({});
+    dS.add(oneLayer);
   };
   
   this.move = (x, y) => {

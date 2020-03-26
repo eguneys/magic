@@ -21,13 +21,24 @@ export default function makeSprites(scene, assets) {
   const cardsAtlas = scene.texture(assets['cards']);
   const cardsFrame = makeFrame(cardsAtlas);
 
+  const white = scene.texture(bgTexture('white')),
+        black = scene.texture(bgTexture('black')),
+        gray = scene.texture(bgTexture('gray')),
+        brown = scene.texture(bgTexture('brown')),
+        yellow = scene.texture(bgTexture('yellow')),
+        red = scene.texture(bgTexture('red')),
+        green = scene.texture(bgTexture('green'));        
+
   return {
-    white: scene.texture(bgTexture('white')),
-    black: scene.texture(bgTexture('black')),
-    gray: scene.texture(bgTexture('gray')),
-    brown: scene.texture(bgTexture('brown')),
-    hero: scene.texture(bgTexture('yellow')),
-    phandle: scene.texture(bgTexture('white'))
+    white: white,
+    black: black,
+    gray: gray,
+    brown: brown,
+    hero: yellow,
+    platform: brown,
+    phandle: white,
+    tPlay: red,
+    toolbar: gray
   };
 }
 
