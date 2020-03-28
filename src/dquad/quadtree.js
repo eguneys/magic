@@ -46,7 +46,6 @@ export default function QuadTree(x, y, w, h,
     }
   };
 
-
   this.insertWithRectangle = (tRect, makeInitialData, onUpdateOldData) => {
     if (tRect.contains(rect)) {
       this.foldChildrenToParentWithUpdate(onUpdateOldData);

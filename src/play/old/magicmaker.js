@@ -18,7 +18,6 @@ export default function MagicMaker(play, ctx, bs) {
     let hHandle = maker.addHandle(x, y, platformWidth, platformHeight, 
                                   pHandle);
 
-
     magic.onePlatformCollidesAnyPlatform(pHandle, (platform) => {
       console.log(pHandle, platform);
     });

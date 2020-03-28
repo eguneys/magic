@@ -1,8 +1,8 @@
 import QuadList from './dquad/quadlist';
 
-export default function MagicCollision() {
+export default function MagicCollision(x, y, w, h, depth) {
   
-  let body = new QuadList(0, 0, 1000, 1000, 10);
+  let body = new QuadList(x, y, w, h, depth);
 
   let byKey = {};
 

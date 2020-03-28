@@ -3,8 +3,8 @@ import { rect } from './dquad/geometry';
 
 import MagicCollision from './magiccolision';
 
-export default function MagicCollisionGroup() {
-  let coll = new MagicCollision();
+export default function MagicCollisionGroup(x, y, w, h, d) {
+  let coll = new MagicCollision(x, y, w, h, d);
 
   const makeItem = (data, type, iRect) => ({
     id: makeId(),

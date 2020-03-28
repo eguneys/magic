@@ -11,14 +11,15 @@ export default function Play(ctx) {
   const bs = (() => {
     const { width, height } = canvas;
 
-    const hero = rect(0, 0, 16, 32);
+    const mage = rect(0, 0, 16, 32);
 
     const platform = rect(0, 0, 16, 16);
 
-    const toolbar = rect(0, 0, width, 64);
+    let toolbarWidth = width * 0.1;
+    const toolbar = rect(width - toolbarWidth, 0, toolbarWidth, height);
 
     return {
-      hero,
+      mage,
       platform,
       toolbar,
       width,

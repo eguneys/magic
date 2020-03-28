@@ -1,56 +1,34 @@
-import MagicSimulation from '../magicsimulation';
-import MagicMaker from '../magicmaker';
 import Magic from '../magic';
+import Maker from '../maker';
 
-import MagicMakerView from './magicmaker';
-import Hero from './hero';
-import Platforms from './platforms';
-import PHandles from './phandles';
 import Toolbar from './toolbar';
+import ButtonClick from './buttonclick';
 
 export default function Board(play, ctx, bs) {
 
-  let magicMaker = new MagicMakerView(this, ctx, bs);
-  let hero = new Hero(this, ctx, bs);
-  let platforms = new Platforms(this, ctx, bs);
-  let pHandles = new PHandles(this, ctx, bs);
-
-  let toolbar = new Toolbar(this, ctx, bs);
-
-  let simulation = new MagicSimulation();
+  let components = [];
+  let toolbar = new Toolbar(play, ctx, bs);
+  let buttonClick = new ButtonClick(play, ctx, bs);
 
   this.init = data => {
 
     let magic = new Magic();
-    let maker = new MagicMaker();
-    magicMaker.init({magic, maker});
+    let maker = new Maker();
 
-    // magic.addHero(0, 10, 32, 64);
-    // simulation.init({magic});
+    buttonClick.init({ maker });
 
-    // hero.init({magic});
-    platforms.init({magic});
-    pHandles.init({magic, maker});
     toolbar.init({magic, maker});
+    components.push(toolbar);
   };
 
   this.update = delta => {
-    magicMaker.update(delta);
-
-    // hero.update(delta);
-    platforms.update(delta);
-    pHandles.update(delta);
-    toolbar.update(delta);
+    components.forEach(_ => _.update(delta));
+    buttonClick.update(delta);
   };
 
 
   this.render = () => {
-    magicMaker.render();
-
-    // hero.render();
-    platforms.render();
-    pHandles.render();
-    toolbar.render();
+    components.forEach(_ => _.render());
   };
   
 }
