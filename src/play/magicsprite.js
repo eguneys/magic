@@ -4,7 +4,7 @@ export default function MagicSprite(play, ctx, bs, frame) {
 
   const { frames, layers: { oneLayer } } = ctx;
 
-  let dBg = sprite(frames['hero']);
+  let dBg = sprite(frames['mage']);
 
   let { x, y,
         width,
@@ -14,11 +14,13 @@ export default function MagicSprite(play, ctx, bs, frame) {
     dBg.frame = frame;
   }
 
+  dBg.width = width;
+  dBg.height = height;
+
   this.init = data => {
   };
 
-  this.update = delta => {
-  };
+  this.update = delta => {};
 
   this.visible = a => dBg.visible = a;
 
@@ -29,9 +31,15 @@ export default function MagicSprite(play, ctx, bs, frame) {
   this.size = (w, h) => {
     width = w;
     height = h;
+
+    dBg.width = width;
+    dBg.height = height;
   };
   this.frame = frame => {
     dBg.frame = frame;
+
+    dBg.width = width;
+    dBg.height = height;
   };
 
   this.add = (layer) => {
@@ -44,8 +52,6 @@ export default function MagicSprite(play, ctx, bs, frame) {
 
 
   this.render = () => {
-    dBg.width = width;
-    dBg.height = height;
     dBg.position.set(x, y);
   };
   

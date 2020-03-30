@@ -34,7 +34,7 @@ export default function makeSprites(scene, assets) {
     black: black,
     gray: gray,
     brown: brown,
-    hero: yellow,
+    mage: yellow,
     platform: brown,
     phandle: white,
     tPlay: red,
