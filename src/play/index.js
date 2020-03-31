@@ -1,6 +1,6 @@
 import { rect } from '../dquad/rect';
 
-import Board from './board';
+import Canabalt from './canabalt';
 
 export default function Play(ctx) {
 
@@ -11,36 +11,27 @@ export default function Play(ctx) {
   const bs = (() => {
     const { width, height } = canvas;
 
-    const mage = rect(0, 0, 16, 32);
-
-    const platform = rect(0, 0, 16, 16);
-
-    let toolbarWidth = width * 0.1;
-    const toolbar = rect(width - toolbarWidth, 0, toolbarWidth, height);
 
     return {
-      mage,
-      platform,
-      toolbar,
       width,
       height
     };
   })();
 
-  let board = new Board(this, ctx, bs);
+  let canabalt = new Canabalt(this, ctx, bs);
 
 
   this.init = data => {
-    board.init({});
+    canabalt.init({});
   };
 
   this.update = delta => {
-    board.update(delta);
+    canabalt.update(delta);
   };
 
 
   this.render = () => {
-    board.render();
+    canabalt.render();
   };
   
 }

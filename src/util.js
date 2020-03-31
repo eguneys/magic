@@ -1,3 +1,5 @@
+export function noop() { };
+
 export const throttle = (fn, delay = 50) => {
   let called = false;
   return (...args) => {

@@ -14,7 +14,7 @@ export function app(element, options) {
   let assetsUrl = 'assets/images/';
 
   new Assets({
-    'cards': 'cards.png'
+    'magic': 'magic.png'
   }, { assetsUrl }).start()
     .then(assets => {
 

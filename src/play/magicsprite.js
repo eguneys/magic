@@ -2,9 +2,7 @@ import { sprite } from '../asprite';
 
 export default function MagicSprite(play, ctx, bs, frame) {
 
-  const { frames, layers: { oneLayer } } = ctx;
-
-  let dBg = sprite(frames['mage']);
+  let dBg = sprite(frame);
 
   let { x, y,
         width,
@@ -17,12 +15,19 @@ export default function MagicSprite(play, ctx, bs, frame) {
   dBg.width = width;
   dBg.height = height;
 
-  this.init = data => {
+  let data;
+
+  this.init = _data => {
+    data = _data;
   };
+
+  this.data = () => data;
 
   this.update = delta => {};
 
   this.visible = a => dBg.visible = a;
+
+  this.pos = () => [x, y];
 
   this.move = (_x, _y) => {
     x = _x;

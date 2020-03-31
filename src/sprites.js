@@ -18,8 +18,8 @@ const animation = (fM, x, y, w, n) => {
 
 export default function makeSprites(scene, assets) {
 
-  const cardsAtlas = scene.texture(assets['cards']);
-  const cardsFrame = makeFrame(cardsAtlas);
+  const magicAtlas = scene.texture(assets['magic']);
+  const magicFrame = makeFrame(magicAtlas);
 
   const white = scene.texture(bgTexture('white')),
         black = scene.texture(bgTexture('black')),
@@ -30,6 +30,8 @@ export default function makeSprites(scene, assets) {
         green = scene.texture(bgTexture('green'));        
 
   return {
+    bg: magicFrame(0, 112, 256, 128),
+    clouds: magicFrame(0, 0, 256, 112),
     white: white,
     black: black,
     gray: gray,

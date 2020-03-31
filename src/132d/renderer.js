@@ -282,6 +282,69 @@ const Renderer = (canvas, options) => {
     count++;
   };
 
+
+  let matrixBufferUpdate = 0,
+      projectionUpdate = 0;
+  let projection;
+  const calculateProjection = () => {
+    // resize();
+
+    const { at, to, angle } = renderer.camera;
+
+    const x = at.x - width * to.x;
+    const y = at.y - height * to.y;
+
+    const c = Math.cos(angle);
+    const s = Math.sin(angle);
+
+    const w = 2 / width;
+    const h = -2 / height;
+
+    /*
+
+      |   1 |    0| 0| 0|
+      |   0 |    1| 0| 0|
+      |   0 |    0| 1| 0|
+      | at.x| at.y| 0| 1|
+
+      x
+
+      |  c| s| 0| 0|
+      | -s| c| 0| 0|
+      |  0| 0| 1| 0|
+      |  0| 0| 0| 1|
+
+      x
+
+      |     1|     0| 0| 0|
+      |     0|     1| 0| 0|
+      |     0|     0| 1| 0|
+      | -at.x| -at.y| 0| 1|
+
+      x
+
+      |     2/width|           0|        0| 0|
+      |           0|   -2/height|        0| 0|
+      |           0|           0| -1/depth| 0|
+      | -2x/width-1| 2y/height+1|        0| 1|
+
+    */
+
+    // prettier-ignore
+    const projection = [
+      c * w, s * h, 0, 0,
+      -s * w, c * h, 0, 0,
+      0, 0, -1 / depth, 0,
+
+      (at.x * (1 - c) + at.y * s) * w - 2 * x / width - 1,
+      (at.y * (1 - c) - at.x * s) * h + 2 * y / height + 1,
+      0, 1,
+    ];
+
+    return projection;
+  };
+
+
   const renderer = {
     gl,
 
@@ -355,65 +418,15 @@ const Renderer = (canvas, options) => {
     resize,
 
     render() {
-      resize();
-
-      const { at, to, angle } = renderer.camera;
-
-      const x = at.x - width * to.x;
-      const y = at.y - height * to.y;
-
-      const c = Math.cos(angle);
-      const s = Math.sin(angle);
-
-      const w = 2 / width;
-      const h = -2 / height;
-
-      /*
-
-      |   1 |    0| 0| 0|
-      |   0 |    1| 0| 0|
-      |   0 |    0| 1| 0|
-      | at.x| at.y| 0| 1|
-
-      x
-
-      |  c| s| 0| 0|
-      | -s| c| 0| 0|
-      |  0| 0| 1| 0|
-      |  0| 0| 0| 1|
-
-      x
-
-      |     1|     0| 0| 0|
-      |     0|     1| 0| 0|
-      |     0|     0| 1| 0|
-      | -at.x| -at.y| 0| 1|
-
-      x
-
-      |     2/width|           0|        0| 0|
-      |           0|   -2/height|        0| 0|
-      |           0|           0| -1/depth| 0|
-      | -2x/width-1| 2y/height+1|        0| 1|
-
-      */
-
-      // prettier-ignore
-      const projection = [
-        c * w, s * h, 0, 0,
-        -s * w, c * h, 0, 0,
-        0, 0, -1 / depth, 0,
-
-        (at.x * (1 - c) + at.y * s) * w - 2 * x / width - 1,
-        (at.y * (1 - c) - at.x * s) * h + 2 * y / height + 1,
-        0, 1,
-      ];
 
       gl.useProgram(program);
       gl.enable(GL_BLEND);
       gl.enable(GL_DEPTH_TEST);
 
-      gl.uniformMatrix4fv(matrixLocation, false, projection);
+      if (matrixBufferUpdate != projectionUpdate)  {
+        matrixBufferUpdate = projectionUpdate;
+        gl.uniformMatrix4fv(matrixLocation, false, projection);
+      }
       gl.viewport(0, 0, width, height);
       gl.clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -432,6 +445,8 @@ const Renderer = (canvas, options) => {
   };
 
   resize();
+  projection = calculateProjection();
+  projectionUpdate++;
 
   return renderer;
 };
