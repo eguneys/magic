@@ -1,6 +1,4 @@
-import { rect } from '../dquad/rect';
-
-import Canabalt from './canabalt';
+import Me from './me';
 
 export default function Play(ctx) {
 
@@ -11,27 +9,32 @@ export default function Play(ctx) {
   const bs = (() => {
     const { width, height } = canvas;
 
+    const tileSize = 24;
 
     return {
+      tileSize,
       width,
       height
     };
   })();
 
-  let canabalt = new Canabalt(this, ctx, bs);
+  let components = [];
 
+  let me = new Me(this, ctx, bs);
 
   this.init = data => {
-    canabalt.init({});
+
+    me.init({});
+    components.push(me);
   };
 
   this.update = delta => {
-    canabalt.update(delta);
+    components.forEach(_ => _.update(delta));
   };
 
 
   this.render = () => {
-    canabalt.render();
+    components.forEach(_ => _.render());
   };
   
 }

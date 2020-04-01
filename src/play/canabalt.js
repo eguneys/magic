@@ -1,4 +1,5 @@
 import TilingSprite from './tilingsprite';
+import MagicSprite from './magicsprite';
 
 export default function Canabalt(play, ctx, bs) {
 
@@ -20,23 +21,36 @@ export default function Canabalt(play, ctx, bs) {
              width: bs.width }, ...bs 
   }, frames['clouds']);
 
+  let dBuildings = new TilingSprite(this, ctx, {
+    local: { x: 0, y: 0, 
+             tileWidth: bs.height * 2.0, 
+             tileHeight: bs.height,
+             width: bs.width }, ...bs 
+  }, frames['bgBuildings']);
+
+  let components = [];
 
   this.init = data => {
     bg.init({});
+    components.push(bg);
     clouds.init({});
+    components.push(clouds);
+    dBuildings.init({});
+    components.push(dBuildings);
   };
 
+  let tick = 0;
+
   this.update = delta => {
-    bg.tileX(-1);
-    clouds.tileX(-2);
-    bg.update(delta);
-    clouds.update(delta);
+    bg.tileX(-1 * delta * 0.01);
+    clouds.tileX(-2 * delta * 0.01);
+    dBuildings.tileX(-3 * delta * 0.01);
+    components.forEach(_ => _.update(delta));
   };
 
 
   this.render = () => {
-    bg.render();
-    clouds.render();
+    components.forEach(_ => _.render());
   };
   
 }

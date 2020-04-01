@@ -24,6 +24,8 @@ export default function Viewport({
   let dragDelta = vec2(0);
   let viewDelta = vec2(0);
 
+  let dragDeltaBuffer = vec2(0);
+
   let iFollow = new ipol(0, 0, {});
 
   let children = new Pool(() => new ViewportChild(this, getPosition), {
@@ -31,7 +33,11 @@ export default function Viewport({
     warnLeak: 20000
   });
 
-  const viewOrigin = () => v.cadd(dragDelta, viewDelta);
+  const viewOrigin = () => {
+    let res = v.cadd(dragDelta, viewDelta);
+    v.add(res, dragDeltaBuffer);
+    return res;
+  };
 
   const worldToView = worldPos => {
     let res = vec2(0);
@@ -58,8 +64,6 @@ export default function Viewport({
 
 
   this.dragDelta = () => dragDelta;
-
-  let dragDeltaBuffer = vec2(0);
 
   this.drag = (v1, scale = 1) => {
     v.setScale(dragDeltaBuffer, v1, -scale);
@@ -187,7 +191,7 @@ function ViewportChild(viewport, getPosition) {
       }
       onView(item, this.visiblePosition());
     } else {
-      if (wasVisible || wasVisible === undefined) {
+      if (wasVisible) {
         wasVisible = false;
         onOff(item);
       }

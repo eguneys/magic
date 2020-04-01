@@ -23,7 +23,9 @@ export default function makeSprites(scene, assets) {
 
   const white = scene.texture(bgTexture('white')),
         black = scene.texture(bgTexture('black')),
-        gray = scene.texture(bgTexture('gray')),
+        gray = scene.texture(bgTexture('#222222')),
+        gray2 = scene.texture(bgTexture('#dddddd')),
+        gray3 = scene.texture(bgTexture('#cccccc')),
         brown = scene.texture(bgTexture('brown')),
         yellow = scene.texture(bgTexture('yellow')),
         red = scene.texture(bgTexture('red')),
@@ -32,9 +34,12 @@ export default function makeSprites(scene, assets) {
   return {
     bg: magicFrame(0, 112, 256, 128),
     clouds: magicFrame(0, 0, 256, 112),
+    bgBuildings: magicFrame(0, 240, 256, 128),
     white: white,
     black: black,
     gray: gray,
+    gray2: gray2,
+    gray3: gray3,
     brown: brown,
     mage: yellow,
     platform: brown,

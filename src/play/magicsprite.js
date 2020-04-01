@@ -1,17 +1,17 @@
 import { sprite } from '../asprite';
 
-export default function MagicSprite(play, ctx, bs, frame) {
-
-  let dBg = sprite(frame);
+export default function MagicSprite(play, ctx, bs) {
 
   let { x, y,
         width,
-        height } = bs.local;
+        height,
+        frame,
+        alpha = 1,
+        angle = 0 } = bs.local;
 
-  if (frame) {
-    dBg.frame = frame;
-  }
+  let dBg = sprite(frame);
 
+  dBg.alpha = alpha;
   dBg.width = width;
   dBg.height = height;
 
@@ -27,13 +27,28 @@ export default function MagicSprite(play, ctx, bs, frame) {
 
   this.visible = a => dBg.visible = a;
 
+  this.alpha = a => dBg.alpha = a;
+
   this.pos = () => [x, y];
+
+  this.hitTest = (posX, posY) => {
+    let left = x,
+        right = x + width,
+        top = y,
+        bottom = y + height;
+
+    return left <= posX && right > posX &&
+      top <= posY && bottom > posY;
+  };
 
   this.move = (_x, _y) => {
     x = _x;
     y = _y;
   };
-  this.size = (w, h) => {
+
+  this.rotate = _angle => angle = _angle;
+
+  this.resize = (w, h) => {
     width = w;
     height = h;
 
@@ -58,6 +73,7 @@ export default function MagicSprite(play, ctx, bs, frame) {
 
   this.render = () => {
     dBg.position.set(x, y);
+    dBg.rotation = angle;
   };
   
 }

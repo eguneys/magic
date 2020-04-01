@@ -5,12 +5,13 @@ export default function TilingSprite(play, ctx, bs, frame) {
 
   const { layers: { oneLayer } } = ctx;
 
-  let { x, y, tileWidth, tileHeight, width } = bs.local;
+  let { x, y, tileWidth, tileHeight, alpha, width } = bs.local;
 
   let nbTiles = Math.ceil(width / tileWidth);
 
   let bg = new Pool(() => {
     return new MagicSprite(play, ctx, { bs, local: {
+      alpha,
       width: tileWidth,
       height: tileHeight
     } }, frame);
@@ -20,7 +21,7 @@ export default function TilingSprite(play, ctx, bs, frame) {
 
   this.init = data => {
     tileX = 0;
-    for (let i = -1; i < nbTiles + 1; i++) {
+    for (let i = 0; i < nbTiles + 1; i++) {
       bg.acquire(_ => {
         _.init({i});
         _.add(oneLayer);
