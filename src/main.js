@@ -1,4 +1,6 @@
 import Loop from 'loopz';
+
+import Api from './start';
 import Assets from './assets';
 import Events from './events';
 import Canvas from './canvas';
@@ -12,6 +14,8 @@ import Play from './play';
 export function app(element, options) {
 
   let assetsUrl = 'assets/images/';
+
+  const api = new Api();
 
   new Assets({
     'magic': 'magic.png'
@@ -37,6 +41,8 @@ export function app(element, options) {
       };
 
       let play = new Play(context);
+      api.init(play);
+
       play.init({});
 
       new Loop(delta => {
@@ -44,7 +50,8 @@ export function app(element, options) {
         play.update(delta);
         play.render();
         canvas.scene.render();
-      }).start();      
+      }).start();
     });
 
+  return api.api();
 }

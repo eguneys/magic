@@ -33,9 +33,11 @@ export default function Maker(play, ctx, bs) {
   const maybeSave = callMaybe(config.events.onSave);
 
   this.save = () => {
-
     maybeSave(magic.export());
+  };
 
+  this.load = (data) => {
+    magic.import(data);
   };
 
   this.update = delta => {

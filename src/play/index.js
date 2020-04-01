@@ -1,9 +1,11 @@
+import { callMaybe } from '../util';
 import Maker from './maker';
 import { rect } from '../dquad/geometry';
 
 export default function Play(ctx) {
 
-  const { canvas, 
+  const { config,
+          canvas, 
           layers: { scene, zeroLayer }, 
           frames } = ctx;
 
@@ -41,11 +43,16 @@ export default function Play(ctx) {
 
   let maker = new Maker(this, ctx, bs);
 
-  this.init = data => {
+  const maybeLoad = callMaybe(config.events.onLoad);
 
+  this.init = data => {
     maker.init({});
     components.push(maker);
+
+    maybeLoad();
   };
+
+  this.load = maker.load;
 
   this.update = delta => {
     components.forEach(_ => _.update(delta));
