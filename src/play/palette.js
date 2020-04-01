@@ -32,12 +32,13 @@ export default function Palette(play, ctx, bs) {
     warnLeak: 10000
   });
 
+  let palette;
   let magic;
 
   this.init = data => {
     magic = data.magic;
 
-    let palette = [
+    palette = [
       MagicRoles.empty,
       MagicRoles.white,
       MagicRoles.black,
@@ -46,6 +47,9 @@ export default function Palette(play, ctx, bs) {
     ];
 
     magic.select(palette[0]);
+  };
+
+  this.attach = () => {
 
     palette.forEach((role, i) => {
       let frame = frames[frameByRole[role]];
@@ -60,6 +64,12 @@ export default function Palette(play, ctx, bs) {
         _.frame(frame);
       });
     });
+    
+  };
+
+  this.detach = () => {
+    dTs.each(_ => _.remove());
+    dTs.releaseAll();
   };
 
   const select = (epos) => {

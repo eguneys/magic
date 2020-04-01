@@ -1,18 +1,24 @@
 import { callMaybe } from '../util';
 import Magic from '../magic';
 
+import Components from './components';
+import MagicComponents from './magiccomponent';
 import Me from './me';
 import Palette from './palette';
 import Toolbar from './toolbar';
+
+import MePlay from './meplay';
 
 export default function Maker(play, ctx, bs) {
 
   const { config } = ctx;
 
-  let components = [];
-  let me = new Me(this, ctx, bs);
-  let palette = new Palette(this, ctx, bs);
+  let mepalette = new MePalette(this, ctx, bs);
   let toolbar = new Toolbar(this, ctx, bs);
+
+  let meplay = new MePlay(this, ctx, bs);
+
+  let meOrme = new Components(this, ctx, bs);
 
   let magic;
 
@@ -21,16 +27,25 @@ export default function Maker(play, ctx, bs) {
     magic.init({});
 
     toolbar.init({});
-    components.push(toolbar);
 
-    me.init({magic});
-    components.push(me);
+    meOrme.init({
+      'edit': mepalette,
+      'play': meplay
+    });
 
-    palette.init({magic});
-    components.push(palette);
+    meOrme.active('edit', { magic });
+  };
+
+  this.attach = () => {
+    toolbar.attach();
   };
 
   const maybeSave = callMaybe(config.events.onSave);
+
+  this.play = () => {
+    let active = meOrme.activeKey() === 'play'?'edit':'play';
+    meOrme.active(active, { magic });
+  };
 
   this.save = () => {
     maybeSave(magic.export());
@@ -41,12 +56,50 @@ export default function Maker(play, ctx, bs) {
   };
 
   this.update = delta => {
-    components.forEach(_ => _.update(delta));
+    toolbar.update(delta);
+    mepalette.update(delta);
+    meplay.update(delta);
   };
 
 
   this.render = () => {
-    components.forEach(_ => _.render());
+    toolbar.render();
+    mepalette.render();
+  };
+  
+}
+
+function MePalette(play, ctx, bs) {
+
+  let mepalette = new MagicComponents(this, ctx, bs);
+  let me = new Me(this, ctx, bs);
+  let palette = new Palette(this, ctx, bs);
+
+  mepalette.add(me);
+  mepalette.add(palette);
+
+  this.init = data => {
+    let magic = data.magic;
+
+    me.init({magic});
+    palette.init({magic});
+  };
+
+  this.attach = () => {
+    mepalette.attach();
+  };
+
+  this.detach = () => {
+    mepalette.detach();
+  };
+
+  this.update = delta => {
+    mepalette.update(delta);
+  };
+
+
+  this.render = () => {
+    mepalette.render();
   };
   
 }

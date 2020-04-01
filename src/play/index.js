@@ -47,12 +47,14 @@ export default function Play(ctx) {
 
   this.init = data => {
     maker.init({});
+    maker.attach();
     components.push(maker);
 
     maybeLoad();
   };
 
   this.load = maker.load;
+  this.play = maker.play;
 
   this.update = delta => {
     components.forEach(_ => _.update(delta));

@@ -65,14 +65,20 @@ export default function Me(play, ctx, bs) {
     }
   });
 
-
-  this.init = data => {
-    magic = data.magic;
-
+  this.attach = () => {
     magic.allPos.forEach(pos => {
       viewport.addChild({ pos });
     });
-    
+  };
+
+  this.detach = () => {
+    viewport.removeChildren();
+    dTs.each(_ => _.release());
+    dTs.releaseAll();
+  };
+
+  this.init = data => {
+    magic = data.magic;
   };
 
   const drag = (pos) => {

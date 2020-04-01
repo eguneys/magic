@@ -14,23 +14,48 @@ export default function Toolbar(play, ctx, bs) {
     frame: frames['red']
   }});
 
+  let dPlay = new MagicSprite(this, ctx, { local: {
+    x: bs.toolbar.x + bs.tileSize * 2.0,
+    y: bs.toolbar.y,
+    width: bs.tileSize * 2.0,
+    height: bs.toolbar.height,
+    frame: frames['green']
+  }});
+
   let components = new MagicComponent(play, ctx, bs);
   let mouseHandler = new MagicMouse(play, ctx, {
     onClick: (epos) => {
-      const hitSave = dSave.hitTest(epos[0], epos[1]);
+      const hitSave = dSave.hitTest(...epos);
+      const hitPlay = dPlay.hitTest(...epos);
 
       if (hitSave) {
         play.save();
       }
 
+      if (hitPlay) {
+        play.play();
+      }
+
     }
   });
+
+  this.attach = () => {
+    dSave.add(twoLayer);
+    dPlay.add(twoLayer);
+  };
+
+  this.detach = () => {
+    dSave.remove();
+    dPlay.remove();
+  };
 
   this.init = data => {
 
     dSave.init({});
-    dSave.add(twoLayer);
     components.add(dSave);
+
+    dPlay.init({});
+    components.add(dPlay);
   };
 
   this.update = delta => {
