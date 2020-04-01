@@ -1,4 +1,5 @@
-import Me from './me';
+import Maker from './maker';
+import { rect } from '../dquad/geometry';
 
 export default function Play(ctx) {
 
@@ -11,8 +12,26 @@ export default function Play(ctx) {
 
     const tileSize = 24;
 
+    let toolbar = rect(5, 5,
+                       width,
+                       tileSize);
+
+    let palette = rect(0,
+                       toolbar.y1,
+                       tileSize * 2 + 10,
+                       height);
+
+    let me = rect(
+      palette.x1,
+      palette.y,
+      tileSize * 2 + 10,
+      height);
+
     return {
       tileSize,
+      toolbar,
+      me,
+      palette,
       width,
       height
     };
@@ -20,12 +39,12 @@ export default function Play(ctx) {
 
   let components = [];
 
-  let me = new Me(this, ctx, bs);
+  let maker = new Maker(this, ctx, bs);
 
   this.init = data => {
 
-    me.init({});
-    components.push(me);
+    maker.init({});
+    components.push(maker);
   };
 
   this.update = delta => {

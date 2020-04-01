@@ -41,6 +41,8 @@ export default function makeSprites(scene, assets) {
     gray2: gray2,
     gray3: gray3,
     brown: brown,
+    red: red,
+    green: green,
     mage: yellow,
     platform: brown,
     phandle: white,

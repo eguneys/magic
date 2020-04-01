@@ -1,5 +1,11 @@
 export function noop() { };
 
+export const callMaybe = fn => {
+  return (...args) => {
+    if (fn) { fn(...args);  }
+  };
+};
+
 export const throttle = (fn, delay = 50) => {
   let called = false;
   return (...args) => {

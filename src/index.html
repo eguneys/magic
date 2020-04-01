@@ -42,7 +42,15 @@
 
   <script>
 
-   Tetris(document.getElementById('app'), {});
+   const onSave = (data) => {
+     console.log(data);
+   };
+
+   Tetris(document.getElementById('app'), {
+     events: {
+       onSave
+     }
+   });
    
   </script>
 

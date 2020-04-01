@@ -2,16 +2,21 @@ import Pool from 'poolf';
 import Viewport from '../viewport';
 import * as v from '../vec2';
 
-import Magic from '../magic';
+import { MagicRoles } from '../magic';
 
 import MagicSprite from './magicsprite';
 
+
 const frameByRole = {
-  EMPTY: (item) => {
+  [MagicRoles.empty]: (item) => {
     let pos = item.pos;
 
     return (pos[0] + pos[1]) % 2 === 0 ? 'gray2':'gray3';
-  }
+  },
+  [MagicRoles.white]: () => 'white',
+  [MagicRoles.black]: () => 'black',
+  [MagicRoles.gray]: () => 'gray',
+  [MagicRoles.brown]: () => 'brown'
 };
 
 export default function Me(play, ctx, bs) {
@@ -20,8 +25,13 @@ export default function Me(play, ctx, bs) {
 
   let { tileSize } = bs;
 
+  let { x, y, width, height } = bs.me;
+
+  let magic;
+
+
   let dTs = new Pool(() => new Tile(this, ctx, bs), {
-    name: 'Me Pool',
+    name: 'Me',
     warnLeak: 10000
   });
 
@@ -32,10 +42,12 @@ export default function Me(play, ctx, bs) {
       return v.cscale(item.pos, tileSize);
     },
     onOn: (item) => {
+      let tile = magic.tile(item.pos);
+
       let dO = dTs.acquire(_ => {
         _.init({pos: item.pos});
         _.resize(tileSize);
-        _.frame(frames[frameByRole[item.role](item)]);
+        _.frame(frames[frameByRole[tile.role](item)]);
       });
       item.dO = dO;
     },
@@ -46,17 +58,19 @@ export default function Me(play, ctx, bs) {
       item.dO = undefined;
     },
     onView: (item, visiblePos) => {
+      let tile = magic.tile(item.pos);
+
       item.dO.move(...visiblePos);
+      item.dO.frame(frames[frameByRole[tile.role](item)]);
     }
   });
 
+
   this.init = data => {
+    magic = data.magic;
 
-    let magic = new Magic();
-    magic.init({});
-
-    magic.each(tile => {
-      viewport.addChild(tile);
+    magic.allPos.forEach(pos => {
+      viewport.addChild({ pos });
     });
     
   };
@@ -73,7 +87,9 @@ export default function Me(play, ctx, bs) {
     const hitTile = dTs.find(_ => _.hitTest(...epos));
 
     if (hitTile) {
-      console.log(hitTile.pos());
+      let pos = hitTile.pos();
+
+      magic.paint(pos);
     }
   };
 
@@ -125,6 +141,8 @@ function Tile(play, ctx, bs) {
   const { frames, layers: { oneLayer } } = ctx;
 
   let local = {
+    x: bs.me.x,
+    y: bs.me.y,
     width: bs.tileSize,
     height: bs.tileSize,
     frame: frames['black']

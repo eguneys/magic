@@ -2,7 +2,7 @@ import { sprite } from '../asprite';
 
 export default function MagicSprite(play, ctx, bs) {
 
-  let { x, y,
+  let { x: baseX, y: baseY,
         width,
         height,
         frame,
@@ -15,11 +15,19 @@ export default function MagicSprite(play, ctx, bs) {
   dBg.width = width;
   dBg.height = height;
 
+  let x,
+      y;
+
   let data;
 
   this.init = _data => {
+    x = 0;
+    y = 0;
     data = _data;
   };
+
+  const visibleX = () => baseX + x;
+  const visibleY = () => baseY + y;
 
   this.data = () => data;
 
@@ -32,10 +40,10 @@ export default function MagicSprite(play, ctx, bs) {
   this.pos = () => [x, y];
 
   this.hitTest = (posX, posY) => {
-    let left = x,
-        right = x + width,
-        top = y,
-        bottom = y + height;
+    let left = visibleX(),
+        right = left + width,
+        top = visibleY(),
+        bottom = top + height;
 
     return left <= posX && right > posX &&
       top <= posY && bottom > posY;
@@ -70,9 +78,8 @@ export default function MagicSprite(play, ctx, bs) {
     dBg.remove();
   };
 
-
   this.render = () => {
-    dBg.position.set(x, y);
+    dBg.position.set(visibleX(), visibleY());
     dBg.rotation = angle;
   };
   
