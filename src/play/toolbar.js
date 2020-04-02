@@ -39,6 +39,16 @@ export default function Toolbar(play, ctx, bs) {
     }
   });
 
+  components.add(dSave);
+  components.add(dPlay);
+
+
+  this.init = data => {
+    dSave.init({});
+    dPlay.init({});
+  };
+
+
   this.attach = () => {
     dSave.add(twoLayer);
     dPlay.add(twoLayer);
@@ -47,15 +57,6 @@ export default function Toolbar(play, ctx, bs) {
   this.detach = () => {
     dSave.remove();
     dPlay.remove();
-  };
-
-  this.init = data => {
-
-    dSave.init({});
-    components.add(dSave);
-
-    dPlay.init({});
-    components.add(dPlay);
   };
 
   this.update = delta => {

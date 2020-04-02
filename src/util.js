@@ -24,9 +24,9 @@ export const safeRemoveFromArray = (arr, item) => {
   }
 };
 
-export const makeId = (() => {
+export const makeId = (prefix) => {
   let n = 1;
   return () => {
-    return n++;
+    return prefix + n++;
   };
-})();
+};

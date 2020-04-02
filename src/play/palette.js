@@ -5,10 +5,7 @@ import { MagicRoles } from '../magic';
 
 const frameByRole = {
   [MagicRoles.empty]: 'gray3',
-  [MagicRoles.white]: 'white',
-  [MagicRoles.black]: 'black',
-  [MagicRoles.gray]: 'gray',
-  [MagicRoles.brown]: 'brown',
+  [MagicRoles.village]: 'yellow',
 };
 
 export default function Palette(play, ctx, bs) {
@@ -40,10 +37,7 @@ export default function Palette(play, ctx, bs) {
 
     palette = [
       MagicRoles.empty,
-      MagicRoles.white,
-      MagicRoles.black,
-      MagicRoles.gray,
-      MagicRoles.brown
+      MagicRoles.village
     ];
 
     magic.select(palette[0]);

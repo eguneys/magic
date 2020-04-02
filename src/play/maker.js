@@ -3,7 +3,7 @@ import Magic from '../magic';
 
 import Components from './components';
 import MagicComponents from './magiccomponent';
-import Me from './me';
+import MeEdit from './meedit';
 import Palette from './palette';
 import Toolbar from './toolbar';
 
@@ -56,15 +56,15 @@ export default function Maker(play, ctx, bs) {
   };
 
   this.update = delta => {
+    magic.update(delta);
     toolbar.update(delta);
-    mepalette.update(delta);
-    meplay.update(delta);
+    meOrme.update(delta);
   };
 
 
   this.render = () => {
     toolbar.render();
-    mepalette.render();
+    meOrme.render();
   };
   
 }
@@ -72,16 +72,16 @@ export default function Maker(play, ctx, bs) {
 function MePalette(play, ctx, bs) {
 
   let mepalette = new MagicComponents(this, ctx, bs);
-  let me = new Me(this, ctx, bs);
+  let meedit = new MeEdit(this, ctx, bs);
   let palette = new Palette(this, ctx, bs);
 
-  mepalette.add(me);
+  mepalette.add(meedit);
   mepalette.add(palette);
 
   this.init = data => {
     let magic = data.magic;
 
-    me.init({magic});
+    meedit.init({magic});
     palette.init({magic});
   };
 

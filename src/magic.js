@@ -20,11 +20,21 @@ export default function Magic() {
 
   const allKeys = allPos.map(pos2key);
 
+  let monsterId = makeId('monster');
+  let monsters = this.monsters = new MagicDiff();
   let tiles = {};
 
   const makeRole = (role) => {
     return {
       role
+    };
+  };
+
+  const makeMonster = (key, role, pos) => {
+    return {
+      key,
+      role,
+      pos
     };
   };
 
@@ -34,8 +44,19 @@ export default function Magic() {
       let key = pos2key(pos);
       tiles[key] = makeRole(MagicRoles.empty);
     });
-    
   };
+
+  this.update = () => {
+    monsters.update();
+  };
+
+  this.addMonster = (role, pos) => {
+    let key = monsterId();
+    let monster = makeMonster(key, role, pos);
+    monsters.add(key, monster);
+  };
+
+  this.monster = key => monsters.object(key);
 
   this.allPos = allPos;
 
@@ -73,10 +94,39 @@ export default function Magic() {
   };
 }
 
+function MagicDiff() {
+  
+  let added = [];
+  let objects = {};
+
+  this.add = (key, value) => {
+    added.push({ key, value });
+  };
+
+  this.added = () => added;
+
+  this.object = key => objects[key];
+
+  this.update = () => {
+    if (added.length > 0) {
+      for (let { key, value } of added) {
+        objects[key] = value;
+      }
+      added = [];
+    }
+  };
+
+}
+
 export const MagicRoles = {
   empty: 'empty',
+  village: 'village',
   white: 'white',
   black: 'black',
   gray: 'gray',
   brown: 'brown'
+};
+
+export const MagicMonsters = {
+  mage: 'mage'
 };
