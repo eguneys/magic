@@ -46,8 +46,11 @@ export default function Play(ctx) {
                          menuCloseWidth,
                          menuCloseWidth);
 
+    let menuUpgrade = rect(0, 0, width, buttonHeight * 1.5);
+
     return {
       menuClose,
+      menuUpgrade,
       menu,
       tap,
       score,
@@ -63,6 +66,8 @@ export default function Play(ctx) {
 
   this.init = data => {
     let tapper = new Tapper();
+    tapper.init({});
+
     dTapper.init({tapper});
     components.push(dTapper);
   };

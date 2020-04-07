@@ -1,3 +1,4 @@
+import { throttle } from '../util';
 import { tapHandler } from './util';
 import MagicSprite from './magicsprite';
 
@@ -56,7 +57,11 @@ export default function MagicButton(play, ctx, bs) {
     dLogo && dLogo.move(x, y);
   };
 
-  const handleTap = tapHandler(events, bounds, bs.onClick);
+  const safeTap = throttle(() => {
+    bs.onClick();
+  }, 100);
+
+  const handleTap = tapHandler(events, bounds, safeTap);
 
   this.update = delta => {
     handleTap();

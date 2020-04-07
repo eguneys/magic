@@ -31,22 +31,28 @@ const quotes = (tss, numbersFrame) => {
   tss['qQuestion'] = numbersFrame(64, 32, 17, 17);
 };
 
+const slice9 = (mFrame, x, y, w, h) => {
+  return [
+    mFrame(x, y, w, h),
+    mFrame(x + w, y, w, h),
+    mFrame(x + w * 2, y, w, h),
+    mFrame(x, y + h, w, h),
+    mFrame(x + w, y + h, w, h),
+    mFrame(x + w * 2, y + h, w, h),
+    mFrame(x, y + h * 2, w, h),
+    mFrame(x + w, y + h * 2, w, h),
+    mFrame(x + w * 2, y + h * 2, w, h)
+  ];
+};
+
 const huds = (tss, hudFrame) => {
   tss['button'] = hudFrame(0, 0, 32, 16);
   tss['upgrade'] = hudFrame(16 * 3, 0, 16);
 
   tss['menuclose'] = hudFrame(32, 0, 16);
-  tss['menubg9'] = [
-    hudFrame(0, 16, 16),
-    hudFrame(16, 16, 16),
-    hudFrame(32, 16, 16),
-    hudFrame(0, 32, 16),
-    hudFrame(16, 32, 16),
-    hudFrame(32, 32, 16),
-    hudFrame(0, 16 * 3, 16),
-    hudFrame(16, 16 * 3, 16),
-    hudFrame(32, 16 * 3, 16)
-  ];
+  tss['menubg9'] = slice9(hudFrame, 0, 16, 16, 16);
+
+  tss['upgradebg9'] = slice9(hudFrame, 48, 16, 16, 32 / 3);
 };
 
 export default function makeSprites(scene, assets) {

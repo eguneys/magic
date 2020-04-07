@@ -3,9 +3,11 @@ import MagicButton from './magicbutton';
 import Magic9 from './magic9';
 import ipol from '../ipol';
 
+import MagicScroll from './magicscroll';
+
 export default function TapUpgrade(play, ctx, bs) {
 
-  const { frames, layers: { threeLayer } } = ctx;
+  const { frames, layers: { threeLayer, fourLayer } } = ctx;
 
   let bg = new Magic9(this, ctx, {
     x: bs.menu.x,
@@ -25,6 +27,13 @@ export default function TapUpgrade(play, ctx, bs) {
     onClick: onCloseClick
   });
 
+  let dScroll = new MagicScroll(this, ctx, {
+    x: bs.menu.x,
+    y: bs.menu.y + 20,
+    width: bs.menu.width,
+    height: bs.menu.height - 40
+  });
+
   function onCloseClick() {
     play.toggleUpgradeMenu();
   }
@@ -33,11 +42,18 @@ export default function TapUpgrade(play, ctx, bs) {
 
   let components = [];
 
+  let tapper;
+
+  let beginRemove;
+
   this.init = data => {
-
+    tapper = data.tapper;
     bg.init({});
-
     components.push(bg);
+
+    dScroll.init({});
+    dScrollComponents();
+    components.push(dScroll);
 
     dClose.init({});
     components.push(dClose);
@@ -45,13 +61,33 @@ export default function TapUpgrade(play, ctx, bs) {
 
   this.add = () => {
 
+    doRemove();
     iFadeIn.both(1, 0);
 
     bg.add(threeLayer);
     dClose.add(threeLayer);
+    dScroll.add(fourLayer);
   };
 
-  let beginRemove;
+  const dScrollComponents = () => {
+    tapper.upgrades()
+      .map((upgrade, i) => {
+        let marginY = 10;
+        let upgradeHeight = bs.menuUpgrade.height;
+
+        let comp = new Upgrade(this, ctx, {
+          x: bs.menu.x + marginY,
+          y: bs.menu.y + marginY * 5.0 + i * (upgradeHeight + marginY),
+          width: bs.menu.width - marginY * 2.0,
+          height: upgradeHeight
+        });
+        comp.init({upgrade});
+        return comp;
+      }).forEach(_ => {
+      dScroll.addComponent(_);
+    });
+  };
+
   this.remove = () => {
     iFadeIn.both(0, 1);
     beginRemove = true;
@@ -61,6 +97,7 @@ export default function TapUpgrade(play, ctx, bs) {
     beginRemove = false;
     bg.remove();
     dClose.remove();
+    dScroll.remove();
   };
 
   this.update = delta => {
@@ -74,6 +111,51 @@ export default function TapUpgrade(play, ctx, bs) {
 
     components.forEach(_ => _.move(-vFadeIn * bs.menu.width, 0));
 
+    components.forEach(_ => _.update(delta));
+  };
+
+
+  this.render = () => {
+    components.forEach(_ => _.render());
+  };
+  
+}
+
+function Upgrade(play, ctx, bs) {
+
+  const { frames } = ctx;
+
+  let bg = new Magic9(this, ctx, {
+    x: bs.x,
+    y: bs.y,
+    width: bs.width,
+    height: bs.height,
+    tileWidth: 16,
+    frames: frames['upgradebg9']
+  });
+
+  let components = [];
+
+  this.init = data => {
+    bg.init({});
+    components.push(bg);
+  };
+
+  this.add = (layer) => {
+    bg.add(layer);
+  };
+
+  this.remove = () => {
+    bg.remove();
+  };
+
+  this.bounds = () => bg.bounds();
+
+  this.move = (x, y) => {
+    bg.move(x, y);
+  };
+
+  this.update = delta => {
     components.forEach(_ => _.update(delta));
   };
 

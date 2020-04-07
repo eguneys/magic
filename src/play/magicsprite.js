@@ -44,6 +44,13 @@ export default function MagicSprite(play, ctx, bs) {
     y = _y;
   };
 
+  this.bounds = () => ({
+    x: visibleX(),
+    y: visibleY(),
+    width,
+    height
+  });
+
   this.rotate = _angle => angle = _angle;
 
   this.resize = (w, h) => {
