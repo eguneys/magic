@@ -27,12 +27,14 @@
 
      #app {
          position: relative;
-         width: 640px;
-         height: 320px;
+         height: 640px;
+         width: 320px;
          margin: auto;
      }
 
     </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
+
 </head>
 <body>
   <section>
@@ -41,6 +43,15 @@
   </section>
 
   <script>
+
+    WebFont.load({
+    google: {
+    families: ['Baloo']
+    },
+    active: e => {
+    init();
+    }     
+    });
 
    function makeStorage(name) {
      return {
@@ -76,8 +87,6 @@
        }
      });
    }
-
-   init();
    
   </script>
 

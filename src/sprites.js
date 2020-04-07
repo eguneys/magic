@@ -16,10 +16,55 @@ const animation = (fM, x, y, w, n) => {
   return res;
 };
 
+const numbers = (tss, numbersFrame) => {
+  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ','].forEach((no, i) =>
+    // tss['number' + no] = scene.texture(labelTexture(no + ''))
+    tss['number' + no] = numbersFrame(0, i * 16, 18, 16)
+  );
+};
+
+const quotes = (tss, numbersFrame) => {
+  tss['qPlus'] = numbersFrame(32, 0, 17, 17);
+  tss['qDiv'] = numbersFrame(64, 0, 18, 17);
+  tss['qMinus'] = numbersFrame(32, 32, 16, 16);
+  tss['qDot'] = numbersFrame(32, 32 + 16, 16, 16);
+  tss['qQuestion'] = numbersFrame(64, 32, 17, 17);
+};
+
+const huds = (tss, hudFrame) => {
+  tss['button'] = hudFrame(0, 0, 32, 16);
+  tss['upgrade'] = hudFrame(16 * 3, 0, 16);
+
+  tss['menuclose'] = hudFrame(32, 0, 16);
+  tss['menubg9'] = [
+    hudFrame(0, 16, 16),
+    hudFrame(16, 16, 16),
+    hudFrame(32, 16, 16),
+    hudFrame(0, 32, 16),
+    hudFrame(16, 32, 16),
+    hudFrame(32, 32, 16),
+    hudFrame(0, 16 * 3, 16),
+    hudFrame(16, 16 * 3, 16),
+    hudFrame(32, 16 * 3, 16)
+  ];
+};
+
 export default function makeSprites(scene, assets) {
 
   const magicAtlas = scene.texture(assets['magic']);
   const magicFrame = makeFrame(magicAtlas);
+
+  const numbersAtlas = scene.texture(assets['numbers']);
+  const numbersFrame = makeFrame(numbersAtlas);
+
+  const hudFrame = makeFrame(scene.texture(assets['hud']));
+
+  const tss = {};
+
+  numbers(tss, numbersFrame);
+  quotes(tss, numbersFrame);
+
+  huds(tss, hudFrame);
 
   const white = scene.texture(bgTexture('white')),
         black = scene.texture(bgTexture('black')),
@@ -29,12 +74,20 @@ export default function makeSprites(scene, assets) {
         brown = scene.texture(bgTexture('brown')),
         yellow = scene.texture(bgTexture('yellow')),
         red = scene.texture(bgTexture('red')),
-        green = scene.texture(bgTexture('green'));        
+        green = scene.texture(bgTexture('green'));
 
   return {
-    bg: magicFrame(0, 112, 256, 128),
-    clouds: magicFrame(0, 0, 256, 112),
-    bgBuildings: magicFrame(0, 240, 256, 128),
+    mtree: magicFrame(0, 0, 8),
+    mdirt: magicFrame(8, 0, 8),
+    mdirtred: magicFrame(0, 8, 8),
+    mdirtblue: magicFrame(8, 8, 8),
+    mvill: magicFrame(16, 0, 8),
+    mvillred: magicFrame(16, 8, 8),
+    mvillblue: magicFrame(24, 0, 8),
+    mmageright: magicFrame(0, 16, 8),
+    mmageleft: magicFrame(8, 16, 8),
+    mmagefront: magicFrame(0, 24, 8),
+    mmageback: magicFrame(8, 24, 8),
     white: white,
     black: black,
     gray: gray,
@@ -48,10 +101,24 @@ export default function makeSprites(scene, assets) {
     platform: brown,
     phandle: white,
     tPlay: red,
-    toolbar: gray
+    toolbar: gray,
+    ...tss
   };
 }
 
+const labelTexture = (label) => {
+  return withCanvasTexture(label.length * 256 * 0.5, 256, (w, h, canvas, ctx) => {
+    // ctx.fillStyle = 'red';
+    // ctx.fillRect(0, 0, w, h);
+    ctx.font = '50pt Baloo';
+    ctx.fillStyle = 'white';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(label, w / 2, 50);
+    
+    return canvas;
+  });
+};
 
 const bgTexture = (color) => {
   return withCanvasTexture(256, 256, (w, h, canvas, ctx) => {
@@ -66,6 +133,8 @@ function withCanvasTexture(width, height, f) {
   canvas.width = width;
   canvas.height = height;
   f(width, height, canvas, canvas.getContext('2d'));
+
+  // document.body.appendChild(canvas);
 
   let texture = canvas;
   return texture;

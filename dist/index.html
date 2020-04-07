@@ -33,6 +33,8 @@
      }
 
     </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
+
 <script type="text/javascript" src="bundle.js"></script></head>
 <body>
   <section>
@@ -42,7 +44,49 @@
 
   <script>
 
-   Tetris(document.getElementById('app'), {});
+    WebFont.load({
+    google: {
+    families: ['Baloo']
+    },
+    active: e => {
+    init();
+    }     
+    });
+
+   function makeStorage(name) {
+     return {
+       get() {
+         let item = localStorage.getItem(name);
+         try {
+           item = JSON.parse(item);
+         } catch (e) {}
+         return item;
+       },
+       set(value) {
+         localStorage.setItem(name, JSON.stringify(value));
+       }
+     }
+   }
+
+   function init() {
+     const levelStorage = makeStorage('level');
+
+     const onSave = (data) => {
+       levelStorage.set(data);
+     };
+
+     const onLoad = () => {
+       let level = levelStorage.get();
+       api.load(level);
+     };
+
+     let api = Tetris(document.getElementById('app'), {
+       events: {
+         onSave,
+         onLoad
+       }
+     });
+   }
    
   </script>
 

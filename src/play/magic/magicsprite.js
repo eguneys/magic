@@ -7,7 +7,7 @@ export default function MagicSprite(play, ctx, bs) {
         height,
         frame,
         alpha = 1,
-        angle = 0 } = bs;
+        angle = 0 } = bs.local;
 
   let dBg = sprite(frame);
 

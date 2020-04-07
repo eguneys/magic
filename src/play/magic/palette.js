@@ -4,8 +4,8 @@ import MagicSprite from './magicsprite';
 import { MagicRoles } from '../magic';
 
 const frameByRole = {
-  [MagicRoles.empty]: 'gray3',
-  [MagicRoles.village]: 'yellow',
+  [MagicRoles.empty]: 'gray2',
+  [MagicRoles.village]: 'mvill',
 };
 
 export default function Palette(play, ctx, bs) {

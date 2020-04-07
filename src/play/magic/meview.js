@@ -2,7 +2,7 @@ import Pool from 'poolf';
 import Viewport from '../viewport';
 import * as v from '../vec2';
 
-import { MagicRoles, MagicMonsters } from '../magic';
+import { allPos, MagicRoles, MagicMonsters } from '../magic';
 
 import MagicSprite from './magicsprite';
 
@@ -14,11 +14,12 @@ const frameByMonsterRole = {
 
 export const frameByRole = {
   [MagicRoles.empty]: (item) => {
+    return 'mdirt';
     let pos = item.pos;
 
     return (pos[0] + pos[1]) % 2 === 0 ? 'gray2':'gray3';
   },
-  [MagicRoles.village]: () => 'yellow',
+  [MagicRoles.village]: () => 'mvill',
 };
 
 
@@ -30,7 +31,7 @@ export default function MeView(play, ctx, bs) {
   let magic;
 
   let dTs = new Pool(() => new Tile(this, ctx, bs), {
-    name: 'Me',
+    name: 'MeView Tile',
     warnLeak: 10000
   });
 
@@ -64,8 +65,8 @@ export default function MeView(play, ctx, bs) {
     }
   });
 
-  let dMs = new Pool(() => new Tile(this, ctx, bs), {
-    name: 'MePlay Monster',
+  let dMs = new Pool(() => new Monster(this, ctx, bs), {
+    name: 'MeView Monster',
     warnLeak: 10000
   });
 
@@ -74,13 +75,13 @@ export default function MeView(play, ctx, bs) {
     vHeight: bs.height,
     getPosition: (item) => {
       let tile = magic.monster(item.key);
-      return v.cscale(tile.pos, tileSize);
+      return v.cscale(tile.pos(), tileSize);
     },
     onOn: (item) => {
       let tile = magic.monster(item.key);
 
       let dO = dMs.acquire(_ => {
-        _.init({pos: item.pos});
+        _.init({key: tile.key});
         _.resize(tileSize);
         _.frame(frames[frameByMonsterRole[tile.role](tile)]);
       });
@@ -105,21 +106,30 @@ export default function MeView(play, ctx, bs) {
   };
 
   this.attach = () => {
-    magic.allPos.forEach(pos => {
+    allPos.forEach(pos => {
       viewport.addChild({ pos });
-    });    
+    });
+
+    magic.allMonsters().forEach(key => {
+      viewportMonster.addChild({ key });
+    });
   };
 
   this.detach = () => {
     viewport.removeChildren();
     dTs.each(_ => _.release());
     dTs.releaseAll();
+
+    viewportMonster.removeChildren();
+    dMs.each(_ => _.release());
+    dMs.releaseAll();
   };
 
   const addMonsters = () => {
-    let added = magic.monsters.added();
+    let added = magic.addedMonsters();
 
-    for (let { key } of added) {
+    
+    for (let key of Object.keys(added)) {
       viewportMonster.addChild({ key });
     }
 
@@ -150,16 +160,77 @@ export default function MeView(play, ctx, bs) {
     return null;
   };
 
+  this.hitMonsterKey = (epos) => {
+    const hitMonster = dMs.find(_ => _.hitTest(...epos));
+    if (hitMonster) {
+      let key = hitMonster.key();
+      return key;
+    }
+    return null;    
+  };
+
   this.update = delta => {
     addMonsters();
 
     viewport.update(delta);
     dTs.each(_ => _.update(delta));
+
+    viewportMonster.update(delta);
+    dMs.each(_ => _.update(delta));
   };
 
 
   this.render = () => {
     dTs.each(_ => _.render());
+    dMs.each(_ => _.render());
+  };
+  
+}
+
+function Monster(play, ctx, bs) {
+
+  const { frames, layers: { oneLayer } } = ctx;
+
+  let local = {
+    x: bs.me.x,
+    y: bs.me.y,
+    width: bs.tileSize,
+    height: bs.tileSize,
+    frame: frames['black']
+  };
+
+  let dS = new MagicSprite(this, ctx, { local, ...bs });
+
+  let key;
+
+  this.init = data => {
+    key = data.key;
+
+    dS.init({});
+    dS.add(oneLayer);
+  };
+
+  this.release = () => {
+    dS.remove();
+  };
+
+
+  this.key = () => key;
+
+  this.hitTest = (x, y) => dS.hitTest(x, y);
+
+  this.resize = (tileSize) => dS.resize(tileSize, tileSize);
+
+  this.move = (x, y) => dS.move(x, y);
+  this.frame = frame => dS.frame(frame);
+
+  this.update = delta => {
+    dS.update(delta);
+  };
+
+
+  this.render = () => {
+    dS.render();
   };
   
 }

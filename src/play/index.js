@@ -1,6 +1,7 @@
-import { callMaybe } from '../util';
-import Maker from './maker';
 import { rect } from '../dquad/geometry';
+import TapperView from './tapper';
+
+import Tapper from '../tapper';
 
 export default function Play(ctx) {
 
@@ -12,28 +13,45 @@ export default function Play(ctx) {
   const bs = (() => {
     const { width, height } = canvas;
 
-    const tileSize = 24;
+    let margin = 10;
 
-    let toolbar = rect(5, 5,
-                       width,
-                       tileSize);
+    let buttonHeight = 60,
+        buttonWidth = buttonHeight * 2;
 
-    let palette = rect(0,
-                       toolbar.y1,
-                       tileSize * 2 + 10,
-                       height);
+    let score = rect(margin, margin, 20, 20);
 
-    let me = rect(
-      palette.x1,
-      palette.y,
-      tileSize * 2 + 10,
-      height);
+    let upgrade = rect(margin, 
+                       height - margin - buttonHeight,
+                       buttonWidth,
+                       buttonHeight);
+
+    let tap = rect(score.x,
+                   40,
+                   width,
+                   height - score.height * 4.0 - upgrade.height);
+
+
+    let menuWidth = width * 0.9,
+        menuHeight = height * 0.8;
+    
+    let menuCloseWidth = width * 0.16;
+
+    let menu = rect((width - menuWidth) * 0.5,
+                    (height - menuHeight) * 0.5,
+                    menuWidth,
+                    menuHeight);
+
+    let menuClose = rect(menu.x1 - menuCloseWidth,
+                         menu.y - menuCloseWidth,
+                         menuCloseWidth,
+                         menuCloseWidth);
 
     return {
-      tileSize,
-      toolbar,
-      me,
-      palette,
+      menuClose,
+      menu,
+      tap,
+      score,
+      upgrade,
       width,
       height
     };
@@ -41,20 +59,13 @@ export default function Play(ctx) {
 
   let components = [];
 
-  let maker = new Maker(this, ctx, bs);
-
-  const maybeLoad = callMaybe(config.events.onLoad);
+  let dTapper = new TapperView(this, ctx, bs);
 
   this.init = data => {
-    maker.init({});
-    maker.attach();
-    components.push(maker);
-
-    maybeLoad();
+    let tapper = new Tapper();
+    dTapper.init({tapper});
+    components.push(dTapper);
   };
-
-  this.load = maker.load;
-  this.play = maker.play;
 
   this.update = delta => {
     components.forEach(_ => _.update(delta));

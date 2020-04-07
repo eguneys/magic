@@ -1,95 +1,72 @@
+import MagicMouse from './magicmouse';
+import MagicComponent from './magiccomponent';
 import MagicSprite from './magicsprite';
-
-const wParent = (parent, child) => {
-  return {
-    ...child,
-    x: child.x + parent.x,
-    y: child.y + parent.y
-  };
-};
 
 export default function Toolbar(play, ctx, bs) {
 
-  const { frames } = ctx;
+  const { events, frames, layers: { twoLayer } } = ctx;
 
-  const { width, height, toolbar } = bs;
+  let dSave = new MagicSprite(this, ctx, { local: {
+    x: bs.toolbar.x,
+    y: bs.toolbar.y,
+    width: bs.tileSize * 2.0,
+    height: bs.toolbar.height,
+    frame: frames['red']
+  }});
 
-  let nbButtons = 8;
+  let dPlay = new MagicSprite(this, ctx, { local: {
+    x: bs.toolbar.x + bs.tileSize * 2.0,
+    y: bs.toolbar.y,
+    width: bs.tileSize * 2.0,
+    height: bs.toolbar.height,
+    frame: frames['green']
+  }});
 
-  let buttonWidth = toolbar.width,
-      buttonHeight = toolbar.height / nbButtons;
+  let components = new MagicComponent(play, ctx, bs);
+  let mouseHandler = new MagicMouse(play, ctx, {
+    onClick: (epos) => {
+      const hitSave = dSave.hitTest(...epos);
+      const hitPlay = dPlay.hitTest(...epos);
 
-  let playBounds = { x: 0, y: 0,
-                     width: buttonWidth,
-                     height: buttonHeight };
+      if (hitSave) {
+        play.save();
+      }
 
-  let dPlay = new Button(play, ctx, 
-                         { local: wParent(toolbar, playBounds), ...bs },
-                         frames['tPlay']);
+      if (hitPlay) {
+        play.play();
+      }
 
-  let dButtons = [dPlay];
+    }
+  });
 
+  components.add(dSave);
+  components.add(dPlay);
 
-  let maker;
 
   this.init = data => {
-    maker = data.maker;
-
-    dPlay.init({ maker, onClick: onPlayClicked });
+    dSave.init({});
+    dPlay.init({});
   };
 
-  const onPlayClicked = () => {
-    play.addMage();
+
+  this.attach = () => {
+    dSave.add(twoLayer);
+    dPlay.add(twoLayer);
   };
 
+  this.detach = () => {
+    dSave.remove();
+    dPlay.remove();
+  };
 
   this.update = delta => {
-    dPlay.update(delta);
+    mouseHandler.update(delta);
+    components.update(delta);
   };
 
 
   this.render = () => {
-    dPlay.render();
+    components.render();
   };
   
-}
-
-function Button(play, ctx, bs, frame) {
-  const { events, frames, layers: { fourLayer } } = ctx;
-  
-  let { local } = bs;
-
-
-  let dS = new MagicSprite(this, ctx, bs,
-                           frame);
-
-  let collider;
-
-  let maker;
-
-  this.init = data => {
-    maker = data.maker;
-
-    dS.init({});
-    dS.add(fourLayer);
-
-    let bounds = {
-      x: local.x,
-      y: local.y,
-      w: local.width,
-      h: local.height
-    };
-
-    maker.buttonCollision(bounds, data.onClick);
-  };
-
-  this.update = delta => {
-    dS.update(delta);
-  };
-
-
-  this.render = () => {
-    dS.render();
-  };
-
 }

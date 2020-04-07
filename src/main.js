@@ -9,6 +9,8 @@ import Config from './config';
 import makeLayers from './layers';
 import makeFrames from './sprites';
 
+import HitBox from './hitbox';
+
 import Play from './play';
 
 export function app(element, options) {
@@ -18,7 +20,9 @@ export function app(element, options) {
   const api = new Api();
 
   new Assets({
-    'magic': 'magic.png'
+    'magic': 'magic.png',
+    'numbers': 'numbers.png',
+    'hud': 'mhud.png'
   }, { assetsUrl }).start()
     .then(assets => {
 
@@ -26,6 +30,8 @@ export function app(element, options) {
 
       const events = new Events(canvas);
       events.bindTouch();
+
+      const hitBox = new HitBox(canvas);
 
       const frames = makeFrames(canvas.scene, assets);
 
@@ -36,6 +42,7 @@ export function app(element, options) {
         events,
         assets,
         canvas,
+        hitBox,
         frames,
         layers: makeLayers(canvas.scene)
       };
