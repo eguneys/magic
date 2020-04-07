@@ -51,6 +51,11 @@ export default function MagicButton(play, ctx, bs) {
     dLogo && dLogo.remove();
   };
 
+  this.move = (x, y) => {
+    dUpgrade.move(x, y);
+    dLogo && dLogo.move(x, y);
+  };
+
   const handleTap = tapHandler(events, bounds, bs.onClick);
 
   this.update = delta => {

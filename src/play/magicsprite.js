@@ -39,16 +39,6 @@ export default function MagicSprite(play, ctx, bs) {
 
   this.pos = () => [x, y];
 
-  this.hitTest = (posX, posY) => {
-    let left = visibleX(),
-        right = left + width,
-        top = visibleY(),
-        bottom = top + height;
-
-    return left <= posX && right > posX &&
-      top <= posY && bottom > posY;
-  };
-
   this.move = (_x, _y) => {
     x = _x;
     y = _y;

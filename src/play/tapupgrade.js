@@ -1,10 +1,11 @@
 import MagicSprite from './magicsprite';
 import MagicButton from './magicbutton';
 import Magic9 from './magic9';
+import ipol from '../ipol';
 
 export default function TapUpgrade(play, ctx, bs) {
 
-  const { frames, layers: { twoLayer } } = ctx;
+  const { frames, layers: { threeLayer } } = ctx;
 
   let bg = new Magic9(this, ctx, {
     x: bs.menu.x,
@@ -28,6 +29,8 @@ export default function TapUpgrade(play, ctx, bs) {
     play.toggleUpgradeMenu();
   }
 
+  let iFadeIn = new ipol(0, 0, {});
+
   let components = [];
 
   this.init = data => {
@@ -41,16 +44,36 @@ export default function TapUpgrade(play, ctx, bs) {
   };
 
   this.add = () => {
-    bg.add(twoLayer);
-    dClose.add(twoLayer);
+
+    iFadeIn.both(1, 0);
+
+    bg.add(threeLayer);
+    dClose.add(threeLayer);
   };
 
+  let beginRemove;
   this.remove = () => {
+    iFadeIn.both(0, 1);
+    beginRemove = true;
+  };
+
+  const doRemove = () => {
+    beginRemove = false;
     bg.remove();
     dClose.remove();
   };
 
   this.update = delta => {
+    iFadeIn.update(delta * 0.01);
+
+    let vFadeIn = iFadeIn.value();
+
+    if (beginRemove && iFadeIn.settled()) {
+      doRemove();
+    }
+
+    components.forEach(_ => _.move(-vFadeIn * bs.menu.width, 0));
+
     components.forEach(_ => _.update(delta));
   };
 

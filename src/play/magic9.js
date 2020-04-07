@@ -91,6 +91,10 @@ export default function Magic9(play, ctx, bs) {
     });
   };
 
+  this.move = (x, y) => {
+    dSs.forEach(_ => _.move(x, y));
+  };
+
   this.update = delta => {
     components.forEach(_ => _.update(delta));
   };
